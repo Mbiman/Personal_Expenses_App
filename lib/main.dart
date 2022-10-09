@@ -27,8 +27,12 @@ class MyHomePage extends StatelessWidget {
       ),
       body: Column(
         children: const [
-          Card(
-            child: Text('Chart!'),
+          SizedBox(
+            width: double.infinity,
+            child: Card(
+              elevation: 5,
+              child: Text('Chart!'),
+            ),
           ),
           Card(
             child: Text('List of transactions'),
