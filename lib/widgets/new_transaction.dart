@@ -1,12 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class NewTransaction extends StatelessWidget {
+class NewTransaction extends StatefulWidget {
   final Function addTx;
-  final titleController = TextEditingController();
-  final amountController = TextEditingController();
 
   NewTransaction(this.addTx);
+
+  @override
+  State<NewTransaction> createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
+  final titleController = TextEditingController();
+
+  final amountController = TextEditingController();
+
+  void submitData() {
+    final enteredTitle = titleController.text;
+    final enteredAmount = double.parse(amountController.text);
+
+    if (enteredTitle.isEmpty || enteredAmount <= 0) {
+      return;
+    }
+
+    widget.addTx(
+      enteredTitle,
+      enteredAmount,
+    );
+
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +41,7 @@ class NewTransaction extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             TextField(
+              onSubmitted: (_) => submitData(),
               controller: titleController,
               decoration: InputDecoration(
                 label: Text(
@@ -28,6 +52,7 @@ class NewTransaction extends StatelessWidget {
             ),
             TextField(
               keyboardType: TextInputType.number,
+              onSubmitted: (_) => submitData(),
               controller: amountController,
               decoration: InputDecoration(
                 label: Text(
@@ -37,16 +62,11 @@ class NewTransaction extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () {
-                addTx(
-                  titleController.text,
-                  double.parse(amountController.text),
-                );
-              },
+              onPressed: submitData,
               child: Text(
                 'Add Transaction',
                 style: GoogleFonts.aBeeZee(
-                  color: Colors.purple,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
             )
