@@ -12,24 +12,28 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return transactions.isEmpty
-        ? Column(
-            children: [
-              Text(
-                'No Transactions added yet!',
-                style: GoogleFonts.aBeeZee(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                height: 200,
-                child: Image.asset(
-                  'assets/images/waiting.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ],
+        ? LayoutBuilder(
+            builder: (context, constraints) {
+              return Column(
+                children: [
+                  Text(
+                    'No Transactions added yet!',
+                    style: GoogleFonts.aBeeZee(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    height: constraints.maxHeight * 0.6,
+                    child: Image.asset(
+                      'assets/images/waiting.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
+              );
+            },
           )
         : ListView.builder(
             itemBuilder: (context, index) {
@@ -59,11 +63,20 @@ class TransactionList extends StatelessWidget {
                     DateFormat.yMMMd().format(transactions[index].date),
                     style: GoogleFonts.aBeeZee(),
                   ),
-                  trailing: IconButton(
-                    color: Theme.of(context).errorColor,
-                    icon: Icon(Icons.delete),
-                    onPressed: () => deleteTx(transactions[index].id),
-                  ),
+                  trailing: MediaQuery.of(context).size.width > 400
+                      ? TextButton.icon(
+                          style: TextButton.styleFrom(
+                            primary: Theme.of(context).errorColor,
+                          ),
+                          onPressed: () => deleteTx(transactions[index].id),
+                          icon: Icon(Icons.delete),
+                          label: Text('delete'),
+                        )
+                      : IconButton(
+                          color: Theme.of(context).errorColor,
+                          icon: Icon(Icons.delete),
+                          onPressed: () => deleteTx(transactions[index].id),
+                        ),
                 ),
               );
             },
