@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_expenses/models/transaction.dart';
@@ -91,20 +92,38 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
-    final appBar = AppBar(
-      actions: [
-        IconButton(
-          onPressed: () => _startAddNewTx(context),
-          icon: Icon(Icons.add),
-        )
-      ],
-      title: Text(
-        'My Expenses',
-        style: GoogleFonts.ubuntu(
-          fontSize: 25,
-        ),
-      ),
-    );
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text(
+              'My Expenses',
+              style: GoogleFonts.ubuntu(
+                fontSize: 25,
+              ),
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  child: Icon(CupertinoIcons.add),
+                  onTap: () => _startAddNewTx(context),
+                ),
+              ],
+            ),
+          )
+        : AppBar(
+            actions: [
+              IconButton(
+                onPressed: () => _startAddNewTx(context),
+                icon: Icon(Icons.add),
+              )
+            ],
+            title: Text(
+              'My Expenses',
+              style: GoogleFonts.ubuntu(
+                fontSize: 25,
+              ),
+            ),
+          );
 
     final txListWidget = Container(
       height: (mediaQuery.size.height -
@@ -114,9 +133,8 @@ class _MyHomePageState extends State<MyHomePage> {
       child: TransactionList(_userTransactions, _deleteTransaction),
     );
 
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
+    final pageBody = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -157,13 +175,23 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Platform.isIOS
-          ? Container()
-          : FloatingActionButton(
-              onPressed: () => _startAddNewTx(context),
-              child: Icon(Icons.add),
-            ),
     );
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+            navigationBar: appBar,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: pageBody,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    onPressed: () => _startAddNewTx(context),
+                    child: Icon(Icons.add),
+                  ),
+          );
   }
 }
