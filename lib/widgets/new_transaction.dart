@@ -1,9 +1,7 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:my_expenses/widgets/adaptive_button.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTx;
@@ -103,28 +101,10 @@ class _NewTransactionState extends State<NewTransaction> {
                         style: GoogleFonts.aBeeZee(),
                       ),
                     ),
-                    Platform.isIOS
-                        ? CupertinoButton(
-                            child: Text(
-                              'Choose Date',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            onPressed: _presentDatePicker,
-                          )
-                        : TextButton(
-                            style: TextButton.styleFrom(
-                              primary: Theme.of(context).primaryColorDark,
-                            ),
-                            onPressed: _presentDatePicker,
-                            child: Text(
-                              'Choose Date',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )
+                    AdaptiveButton(
+                      onPressed: _presentDatePicker,
+                      text: 'Choose Date',
+                    ),
                   ],
                 ),
               ),
