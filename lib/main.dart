@@ -142,7 +142,10 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Show Chart'),
+                  Text(
+                    'Show Chart',
+                    style: Theme.of(context).primaryTextTheme.titleSmall,
+                  ),
                   Switch.adaptive(
                     value: _showChart,
                     onChanged: (val) {
