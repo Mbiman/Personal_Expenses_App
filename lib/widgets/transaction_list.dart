@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:my_expenses/models/transaction.dart';
+import 'package:my_expenses/widgets/transaction_item.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
   final Function deleteTx;
 
-  TransactionList(this.transactions, this.deleteTx);
+  const TransactionList(this.transactions, this.deleteTx);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class TransactionList extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Container(
                     height: constraints.maxHeight * 0.6,
                     child: Image.asset(
@@ -37,48 +37,8 @@ class TransactionList extends StatelessWidget {
           )
         : ListView.builder(
             itemBuilder: (context, index) {
-              return Card(
-                elevation: 5,
-                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    child: Padding(
-                      padding: const EdgeInsets.all(6.0),
-                      child: FittedBox(
-                        child: Text(
-                          '\$${transactions[index].amount}',
-                        ),
-                      ),
-                    ),
-                  ),
-                  title: Text(
-                    transactions[index].title,
-                    style: GoogleFonts.aBeeZee(
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 20,
-                    ),
-                  ),
-                  subtitle: Text(
-                    DateFormat.yMMMd().format(transactions[index].date),
-                    style: GoogleFonts.aBeeZee(),
-                  ),
-                  trailing: MediaQuery.of(context).size.width > 400
-                      ? TextButton.icon(
-                          style: TextButton.styleFrom(
-                            primary: Theme.of(context).errorColor,
-                          ),
-                          onPressed: () => deleteTx(transactions[index].id),
-                          icon: Icon(Icons.delete),
-                          label: Text('delete'),
-                        )
-                      : IconButton(
-                          color: Theme.of(context).errorColor,
-                          icon: Icon(Icons.delete),
-                          onPressed: () => deleteTx(transactions[index].id),
-                        ),
-                ),
-              );
+              return TransactionItem(
+                  transaction: transactions[index], deleteTx: deleteTx);
             },
             itemCount: transactions.length,
           );
